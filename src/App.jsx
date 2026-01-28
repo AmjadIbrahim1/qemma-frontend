@@ -1,11 +1,14 @@
 // frontend/src/App.jsx
 import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes';
+import AppLayout from './components/layout/AppLayout';
 
 function App() {
   return (
     <BrowserRouter>
-      <AppRoutes />
+      <AppLayout>
+        <AppRoutes />
+      </AppLayout>
     </BrowserRouter>
   );
 }

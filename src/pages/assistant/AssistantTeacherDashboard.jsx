@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   Avatar,
-  Button,
   IconButton,
   Divider,
   TextField,
@@ -21,7 +20,6 @@ import {
 import {
   ArrowBack,
   Search,
-  Home,
   Send,
   AttachFile,
   EmojiEmotions,
@@ -30,6 +28,7 @@ import {
   PeopleOutline,
   TrendingUp,
   Schedule,
+  CheckCircle,
 } from '@mui/icons-material';
 
 // ✅ DUMMY DATA - Students List
@@ -139,13 +138,8 @@ const AssistantTeacherDashboard = () => {
   const handleSendMessage = () => {
     if (messageInput.trim()) {
       console.log('Sending message:', messageInput);
-      // Here you would send the message to the backend
       setMessageInput('');
     }
-  };
-
-  const handleGoHome = () => {
-    navigate('/');
   };
 
   // If no student selected, show students list
@@ -154,33 +148,54 @@ const AssistantTeacherDashboard = () => {
       <Box
         sx={{
           minHeight: '100vh',
-          background: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #bbf7d0 100%)',
-          py: 4,
+          position: 'relative',
+          overflow: 'hidden',
+          background: `
+            radial-gradient(900px 420px at 80% 10%, rgba(99,102,241,0.18), transparent 60%),
+            radial-gradient(900px 420px at 15% 15%, rgba(59,130,246,0.18), transparent 60%),
+            linear-gradient(135deg, #eff6ff 0%, #ffffff 45%, #eef2ff 100%)
+          `,
+          pt: 12, // Add padding top to account for navbar
+          pb: 4,
+          '&::before': {
+            content: '""',
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: `
+              radial-gradient(circle at 20% 30%, rgba(59,130,246,0.12), transparent 46%),
+              radial-gradient(circle at 80% 20%, rgba(99,102,241,0.12), transparent 46%)
+            `,
+            opacity: 0.9,
+            pointerEvents: 'none',
+          },
         }}
       >
-        <Container maxWidth="lg">
-          {/* ✅ STUNNING HEADER WITH GRADIENT */}
+        <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1 }}>
+          {/* ✅ PROFESSIONAL HEADER */}
           <Card
             sx={{
               mb: 4,
-              borderRadius: 4,
+              borderRadius: 3,
               overflow: 'hidden',
-              boxShadow: '0 20px 60px rgba(5, 150, 105, 0.25)',
-              background: 'linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%)',
-              position: 'relative',
-              '&::before': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h60v60H0z\' fill=\'none\'/%3E%3Cpath d=\'M30 30m-10 0a10 10 0 1 1 20 0a10 10 0 1 1-20 0\' fill=\'%23ffffff\' opacity=\'0.05\'/%3E%3C/svg%3E")',
-                opacity: 0.3,
+              border: '1px solid',
+              borderColor: 'rgba(99, 102, 241, 0.15)',
+              background: 'rgba(255, 255, 255, 0.90)',
+              backdropFilter: 'blur(12px)',
+              boxShadow: '0 8px 32px rgba(59, 130, 246, 0.12)',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                boxShadow: '0 12px 48px rgba(59, 130, 246, 0.18)',
+                transform: 'translateY(-2px)',
               },
             }}
           >
-            <CardContent sx={{ py: 4, px: 4, position: 'relative', zIndex: 1 }}>
+            <Box
+              sx={{
+                background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.16), rgba(124, 58, 237, 0.14), rgba(219, 39, 119, 0.12))',
+                borderBottom: '1px solid rgba(99, 102, 241, 0.2)',
+                p: 4,
+              }}
+            >
               <Box
                 sx={{
                   display: 'flex',
@@ -197,8 +212,7 @@ const AssistantTeacherDashboard = () => {
                     fontFamily="Cairo, sans-serif"
                     sx={{ 
                       mb: 1,
-                      color: 'white',
-                      textShadow: '0 2px 20px rgba(0,0,0,0.2)',
+                      color: 'rgb(17 24 39)',
                       letterSpacing: '-0.5px',
                     }}
                   >
@@ -208,66 +222,75 @@ const AssistantTeacherDashboard = () => {
                     variant="h6"
                     fontFamily="Cairo, sans-serif"
                     sx={{ 
-                      color: 'rgba(255,255,255,0.95)',
+                      color: 'rgb(75 85 99)',
                       fontWeight: 600,
-                      textShadow: '0 1px 10px rgba(0,0,0,0.1)',
                     }}
                   >
                     تواصل مع طلابك وساعدهم في رحلتهم التعليمية
                   </Typography>
                 </Box>
-
-                <Button
-                  variant="contained"
-                  size="large"
-                  startIcon={<Home />}
-                  onClick={handleGoHome}
-                  sx={{
-                    fontFamily: 'Cairo, sans-serif',
-                    fontWeight: 800,
-                    borderRadius: 3,
-                    bgcolor: 'white',
-                    color: '#059669',
-                    px: 4,
-                    py: 1.5,
-                    fontSize: '1.1rem',
-                    boxShadow: '0 8px 24px rgba(255,255,255,0.3)',
-                    '&:hover': {
-                      bgcolor: '#f0fdf4',
-                      transform: 'translateY(-2px)',
-                      boxShadow: '0 12px 32px rgba(255,255,255,0.4)',
-                    },
-                    transition: 'all 0.3s ease',
-                  }}
-                >
-                  الصفحة الرئيسية
-                </Button>
               </Box>
-            </CardContent>
+            </Box>
           </Card>
 
-          {/* ✅ STATS CARDS */}
+          {/* ✅ PROFESSIONAL STATS CARDS */}
           <Grid container spacing={3} sx={{ mb: 4 }}>
             <Grid item xs={12} sm={6} md={3}>
               <Card
                 sx={{
-                  borderRadius: 3,
-                  boxShadow: '0 4px 20px rgba(37, 99, 235, 0.15)',
-                  background: 'linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)',
-                  color: 'white',
+                  borderRadius: 2.5,
+                  border: '1px solid rgba(37, 99, 235, 0.15)',
+                  background: 'rgba(255, 255, 255, 0.85)',
+                  backdropFilter: 'blur(10px)',
+                  boxShadow: '0 4px 20px rgba(37, 99, 235, 0.10)',
                   transition: 'all 0.3s ease',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, rgb(37 99 235), rgb(59 130 246))',
+                  },
                   '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 8px 32px rgba(37, 99, 235, 0.25)',
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 8px 32px rgba(37, 99, 235, 0.18)',
                   },
                 }}
               >
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <PeopleOutline sx={{ fontSize: 48, mb: 1 }} />
-                  <Typography variant="h4" fontFamily="Cairo, sans-serif" fontWeight={900}>
+                <CardContent sx={{ textAlign: 'center', py: 3.5 }}>
+                  <Box
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(59, 130, 246, 0.08))',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto 16px',
+                      border: '2px solid rgba(37, 99, 235, 0.2)',
+                    }}
+                  >
+                    <PeopleOutline sx={{ fontSize: 32, color: 'rgb(37 99 235)' }} />
+                  </Box>
+                  <Typography 
+                    variant="h3" 
+                    fontFamily="Cairo, sans-serif" 
+                    fontWeight={900}
+                    sx={{ color: 'rgb(17 24 39)', mb: 0.5 }}
+                  >
                     {DUMMY_STUDENTS.length}
                   </Typography>
-                  <Typography variant="body2" fontFamily="Cairo, sans-serif" sx={{ opacity: 0.9 }}>
+                  <Typography 
+                    variant="body2" 
+                    fontFamily="Cairo, sans-serif"
+                    fontWeight={600}
+                    sx={{ color: 'rgb(75 85 99)' }}
+                  >
                     إجمالي الطلاب
                   </Typography>
                 </CardContent>
@@ -277,23 +300,59 @@ const AssistantTeacherDashboard = () => {
             <Grid item xs={12} sm={6} md={3}>
               <Card
                 sx={{
-                  borderRadius: 3,
-                  boxShadow: '0 4px 20px rgba(5, 150, 105, 0.15)',
-                  background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                  color: 'white',
+                  borderRadius: 2.5,
+                  border: '1px solid rgba(124, 58, 237, 0.15)',
+                  background: 'rgba(255, 255, 255, 0.85)',
+                  backdropFilter: 'blur(10px)',
+                  boxShadow: '0 4px 20px rgba(124, 58, 237, 0.10)',
                   transition: 'all 0.3s ease',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, rgb(124 58 237), rgb(147 51 234))',
+                  },
                   '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 8px 32px rgba(5, 150, 105, 0.25)',
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 8px 32px rgba(124, 58, 237, 0.18)',
                   },
                 }}
               >
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <TrendingUp sx={{ fontSize: 48, mb: 1 }} />
-                  <Typography variant="h4" fontFamily="Cairo, sans-serif" fontWeight={900}>
+                <CardContent sx={{ textAlign: 'center', py: 3.5 }}>
+                  <Box
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.12), rgba(147, 51, 234, 0.08))',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto 16px',
+                      border: '2px solid rgba(124, 58, 237, 0.2)',
+                    }}
+                  >
+                    <TrendingUp sx={{ fontSize: 32, color: 'rgb(124 58 237)' }} />
+                  </Box>
+                  <Typography 
+                    variant="h3" 
+                    fontFamily="Cairo, sans-serif" 
+                    fontWeight={900}
+                    sx={{ color: 'rgb(17 24 39)', mb: 0.5 }}
+                  >
                     {onlineStudents}
                   </Typography>
-                  <Typography variant="body2" fontFamily="Cairo, sans-serif" sx={{ opacity: 0.9 }}>
+                  <Typography 
+                    variant="body2" 
+                    fontFamily="Cairo, sans-serif"
+                    fontWeight={600}
+                    sx={{ color: 'rgb(75 85 99)' }}
+                  >
                     طلاب متصلين
                   </Typography>
                 </CardContent>
@@ -303,23 +362,59 @@ const AssistantTeacherDashboard = () => {
             <Grid item xs={12} sm={6} md={3}>
               <Card
                 sx={{
-                  borderRadius: 3,
-                  boxShadow: '0 4px 20px rgba(236, 72, 153, 0.15)',
-                  background: 'linear-gradient(135deg, #db2777 0%, #ec4899 100%)',
-                  color: 'white',
+                  borderRadius: 2.5,
+                  border: '1px solid rgba(219, 39, 119, 0.15)',
+                  background: 'rgba(255, 255, 255, 0.85)',
+                  backdropFilter: 'blur(10px)',
+                  boxShadow: '0 4px 20px rgba(219, 39, 119, 0.10)',
                   transition: 'all 0.3s ease',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, rgb(219 39 119), rgb(236 72 153))',
+                  },
                   '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 8px 32px rgba(236, 72, 153, 0.25)',
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 8px 32px rgba(219, 39, 119, 0.18)',
                   },
                 }}
               >
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <ChatBubbleOutline sx={{ fontSize: 48, mb: 1 }} />
-                  <Typography variant="h4" fontFamily="Cairo, sans-serif" fontWeight={900}>
+                <CardContent sx={{ textAlign: 'center', py: 3.5 }}>
+                  <Box
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, rgba(219, 39, 119, 0.12), rgba(236, 72, 153, 0.08))',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto 16px',
+                      border: '2px solid rgba(219, 39, 119, 0.2)',
+                    }}
+                  >
+                    <ChatBubbleOutline sx={{ fontSize: 32, color: 'rgb(219 39 119)' }} />
+                  </Box>
+                  <Typography 
+                    variant="h3" 
+                    fontFamily="Cairo, sans-serif" 
+                    fontWeight={900}
+                    sx={{ color: 'rgb(17 24 39)', mb: 0.5 }}
+                  >
                     {totalUnread}
                   </Typography>
-                  <Typography variant="body2" fontFamily="Cairo, sans-serif" sx={{ opacity: 0.9 }}>
+                  <Typography 
+                    variant="body2" 
+                    fontFamily="Cairo, sans-serif"
+                    fontWeight={600}
+                    sx={{ color: 'rgb(75 85 99)' }}
+                  >
                     رسائل جديدة
                   </Typography>
                 </CardContent>
@@ -329,23 +424,59 @@ const AssistantTeacherDashboard = () => {
             <Grid item xs={12} sm={6} md={3}>
               <Card
                 sx={{
-                  borderRadius: 3,
-                  boxShadow: '0 4px 20px rgba(124, 58, 237, 0.15)',
-                  background: 'linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)',
-                  color: 'white',
+                  borderRadius: 2.5,
+                  border: '1px solid rgba(99, 102, 241, 0.15)',
+                  background: 'rgba(255, 255, 255, 0.85)',
+                  backdropFilter: 'blur(10px)',
+                  boxShadow: '0 4px 20px rgba(99, 102, 241, 0.10)',
                   transition: 'all 0.3s ease',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: '4px',
+                    background: 'linear-gradient(90deg, rgb(99 102 241), rgb(129 140 248))',
+                  },
                   '&:hover': {
-                    transform: 'translateY(-5px)',
-                    boxShadow: '0 8px 32px rgba(124, 58, 237, 0.25)',
+                    transform: 'translateY(-4px)',
+                    boxShadow: '0 8px 32px rgba(99, 102, 241, 0.18)',
                   },
                 }}
               >
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <Schedule sx={{ fontSize: 48, mb: 1 }} />
-                  <Typography variant="h4" fontFamily="Cairo, sans-serif" fontWeight={900}>
+                <CardContent sx={{ textAlign: 'center', py: 3.5 }}>
+                  <Box
+                    sx={{
+                      width: 64,
+                      height: 64,
+                      borderRadius: '50%',
+                      background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(129, 140, 248, 0.08))',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      margin: '0 auto 16px',
+                      border: '2px solid rgba(99, 102, 241, 0.2)',
+                    }}
+                  >
+                    <Schedule sx={{ fontSize: 32, color: 'rgb(99 102 241)' }} />
+                  </Box>
+                  <Typography 
+                    variant="h3" 
+                    fontFamily="Cairo, sans-serif" 
+                    fontWeight={900}
+                    sx={{ color: 'rgb(17 24 39)', mb: 0.5 }}
+                  >
                     24/7
                   </Typography>
-                  <Typography variant="body2" fontFamily="Cairo, sans-serif" sx={{ opacity: 0.9 }}>
+                  <Typography 
+                    variant="body2" 
+                    fontFamily="Cairo, sans-serif"
+                    fontWeight={600}
+                    sx={{ color: 'rgb(75 85 99)' }}
+                  >
                     متاح دائماً
                   </Typography>
                 </CardContent>
@@ -353,22 +484,23 @@ const AssistantTeacherDashboard = () => {
             </Grid>
           </Grid>
 
-          {/* ✅ ENHANCED SEARCH BAR */}
+          {/* ✅ PROFESSIONAL SEARCH BAR */}
           <Card 
             sx={{ 
               mb: 4, 
-              borderRadius: 4, 
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
-              border: '2px solid',
-              borderColor: 'rgba(5, 150, 105, 0.1)',
+              borderRadius: 2.5,
+              border: '1px solid rgba(15, 23, 42, 0.10)',
+              background: 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
               transition: 'all 0.3s ease',
               '&:hover': {
-                borderColor: 'rgba(5, 150, 105, 0.3)',
-                boxShadow: '0 12px 48px rgba(5, 150, 105, 0.15)',
+                borderColor: 'rgba(99, 102, 241, 0.3)',
+                boxShadow: '0 8px 32px rgba(99, 102, 241, 0.12)',
               },
             }}
           >
-            <CardContent sx={{ py: 2.5 }}>
+            <CardContent sx={{ py: 2 }}>
               <TextField
                 fullWidth
                 placeholder="ابحث عن طالب..."
@@ -377,12 +509,14 @@ const AssistantTeacherDashboard = () => {
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <Search sx={{ color: '#059669', fontSize: 28 }} />
+                      <Search sx={{ color: 'rgb(99 102 241)', fontSize: 26 }} />
                     </InputAdornment>
                   ),
                   sx: { 
                     fontFamily: 'Cairo, sans-serif',
-                    fontSize: '1.1rem',
+                    fontSize: '1.05rem',
+                    fontWeight: 600,
+                    color: 'rgb(17 24 39)',
                     '& .MuiOutlinedInput-notchedOutline': {
                       border: 'none',
                     },
@@ -392,24 +526,30 @@ const AssistantTeacherDashboard = () => {
             </CardContent>
           </Card>
 
-          {/* ✅ ENHANCED STUDENTS LIST */}
+          {/* ✅ PROFESSIONAL STUDENTS LIST */}
           <Card 
             sx={{ 
-              borderRadius: 4, 
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)', 
+              borderRadius: 2.5,
+              border: '1px solid rgba(15, 23, 42, 0.10)',
+              background: 'rgba(255, 255, 255, 0.85)',
+              backdropFilter: 'blur(10px)',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.06)',
               overflow: 'hidden',
-              border: '1px solid',
-              borderColor: 'rgba(5, 150, 105, 0.1)',
             }}
           >
             <Box
               sx={{
-                background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                color: 'white',
+                background: 'linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(99, 102, 241, 0.06))',
+                borderBottom: '1px solid rgba(99, 102, 241, 0.15)',
                 p: 3,
               }}
             >
-              <Typography variant="h5" fontFamily="Cairo, sans-serif" fontWeight={900}>
+              <Typography 
+                variant="h5" 
+                fontFamily="Cairo, sans-serif" 
+                fontWeight={900}
+                sx={{ color: 'rgb(17 24 39)' }}
+              >
                 📋 قائمة الطلاب ({filteredStudents.length})
               </Typography>
             </Box>
@@ -453,10 +593,10 @@ const AssistantTeacherDashboard = () => {
                         transition: 'all 0.3s ease',
                         position: 'relative',
                         '&:hover': {
-                          bgcolor: 'linear-gradient(90deg, rgba(5, 150, 105, 0.05) 0%, rgba(16, 185, 129, 0.08) 100%)',
-                          transform: 'translateX(-8px)',
+                          bgcolor: 'rgba(99, 102, 241, 0.04)',
+                          transform: 'translateX(-4px)',
                           '&::before': {
-                            width: '6px',
+                            width: '4px',
                           },
                         },
                         '&::before': {
@@ -466,12 +606,12 @@ const AssistantTeacherDashboard = () => {
                           top: 0,
                           bottom: 0,
                           width: 0,
-                          background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+                          background: 'linear-gradient(135deg, rgb(99 102 241), rgb(124 58 237))',
                           transition: 'width 0.3s ease',
                         },
                       }}
                     >
-                      {/* ✅ Enhanced Avatar with Status Badge */}
+                      {/* Avatar with Badge */}
                       <Box sx={{ position: 'relative' }}>
                         <Badge
                           badgeContent={student.unreadCount || null}
@@ -480,42 +620,38 @@ const AssistantTeacherDashboard = () => {
                             '& .MuiBadge-badge': {
                               fontFamily: 'Cairo, sans-serif',
                               fontWeight: 900,
-                              fontSize: '0.75rem',
-                              boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
+                              fontSize: '0.7rem',
+                              background: 'linear-gradient(135deg, rgb(219 39 119), rgb(236 72 153))',
+                              boxShadow: '0 2px 8px rgba(219, 39, 119, 0.4)',
                             },
                           }}
                         >
                           <Avatar
                             sx={{
-                              width: 64,
-                              height: 64,
-                              fontSize: '2.2rem',
-                              background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
-                              boxShadow: '0 4px 16px rgba(5, 150, 105, 0.3)',
-                              border: '3px solid white',
+                              width: 60,
+                              height: 60,
+                              fontSize: '2rem',
+                              background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(124, 58, 237, 0.12))',
+                              border: '3px solid rgba(99, 102, 241, 0.2)',
+                              boxShadow: '0 4px 12px rgba(99, 102, 241, 0.15)',
                             }}
                           >
                             {student.avatar}
                           </Avatar>
                         </Badge>
-                        {/* Online Status Indicator */}
+                        {/* Online Status */}
                         {student.isOnline && (
                           <Box
                             sx={{
                               position: 'absolute',
                               bottom: 2,
                               right: 2,
-                              width: 16,
-                              height: 16,
+                              width: 14,
+                              height: 14,
                               borderRadius: '50%',
-                              bgcolor: '#10b981',
+                              bgcolor: 'rgb(34 197 94)',
                               border: '3px solid white',
-                              boxShadow: '0 0 12px #10b981',
-                              animation: 'pulse 2s infinite',
-                              '@keyframes pulse': {
-                                '0%, 100%': { opacity: 1 },
-                                '50%': { opacity: 0.6 },
-                              },
+                              boxShadow: '0 0 0 2px rgba(34, 197, 94, 0.3)',
                             }}
                           />
                         )}
@@ -527,19 +663,19 @@ const AssistantTeacherDashboard = () => {
                           variant="h6"
                           fontFamily="Cairo, sans-serif"
                           fontWeight={900}
-                          sx={{ mb: 0.5, color: '#059669' }}
+                          sx={{ mb: 0.5, color: 'rgb(17 24 39)' }}
                         >
                           {student.name}
                         </Typography>
                         <Typography
                           variant="body1"
-                          color="text.secondary"
                           fontFamily="Cairo, sans-serif"
                           sx={{
                             overflow: 'hidden',
                             textOverflow: 'ellipsis',
                             whiteSpace: 'nowrap',
                             fontWeight: 600,
+                            color: 'rgb(107 114 128)',
                           }}
                         >
                           {student.lastMessage}
@@ -550,10 +686,9 @@ const AssistantTeacherDashboard = () => {
                       <Box sx={{ textAlign: 'left' }}>
                         <Typography
                           variant="caption"
-                          color="text.secondary"
                           fontFamily="Cairo, sans-serif"
                           fontWeight={700}
-                          sx={{ display: 'block', mb: 1 }}
+                          sx={{ display: 'block', mb: 1, color: 'rgb(107 114 128)' }}
                         >
                           {student.lastMessageTime}
                         </Typography>
@@ -562,18 +697,17 @@ const AssistantTeacherDashboard = () => {
                           size="small"
                           sx={{
                             fontFamily: 'Cairo, sans-serif',
-                            fontSize: '0.75rem',
+                            fontSize: '0.7rem',
                             fontWeight: 900,
-                            bgcolor: '#dcfce7',
-                            color: '#059669',
-                            border: '2px solid #10b981',
-                            boxShadow: '0 2px 8px rgba(5, 150, 105, 0.2)',
+                            color: 'rgb(76 29 149)',
+                            background: 'rgba(124, 58, 237, 0.10)',
+                            border: '1px solid rgba(124, 58, 237, 0.22)',
                           }}
                         />
                       </Box>
                     </Box>
                     {index < filteredStudents.length - 1 && (
-                      <Divider sx={{ borderColor: 'rgba(5, 150, 105, 0.1)' }} />
+                      <Divider sx={{ borderColor: 'rgba(15, 23, 42, 0.08)' }} />
                     )}
                   </Box>
                 ))
@@ -585,34 +719,37 @@ const AssistantTeacherDashboard = () => {
     );
   }
 
-  // ✅ ENHANCED CHAT VIEW
+  // ✅ PROFESSIONAL CHAT VIEW
   return (
     <Box
       sx={{
         height: '100vh',
         display: 'flex',
         flexDirection: 'column',
-        background: '#e5ddd5',
+        background: '#f8fafc',
       }}
     >
-      {/* ✅ Enhanced Chat Header */}
+      {/* Chat Header */}
       <Box
         sx={{
-          background: 'linear-gradient(135deg, #059669 0%, #10b981 100%)',
+          background: 'linear-gradient(135deg, rgb(67 56 202), rgb(99 102 241), rgb(124 58 237))',
           color: 'white',
           p: 2.5,
           display: 'flex',
           alignItems: 'center',
           gap: 2,
-          boxShadow: '0 4px 20px rgba(5, 150, 105, 0.3)',
+          boxShadow: '0 4px 20px rgba(67, 56, 202, 0.25)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.15)',
+          mt: 8, // Add margin top to account for navbar
         }}
       >
         <IconButton 
           onClick={handleBackToStudents} 
           sx={{ 
             color: 'white',
+            bgcolor: 'rgba(255, 255, 255, 0.15)',
             '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.2)',
+              bgcolor: 'rgba(255, 255, 255, 0.25)',
             },
           }}
         >
@@ -625,8 +762,7 @@ const AssistantTeacherDashboard = () => {
             height: 48, 
             fontSize: '1.8rem',
             bgcolor: 'white',
-            color: '#059669',
-            border: '3px solid rgba(255, 255, 255, 0.3)',
+            border: '2px solid rgba(255, 255, 255, 0.4)',
           }}
         >
           {selectedStudent.avatar}
@@ -639,12 +775,11 @@ const AssistantTeacherDashboard = () => {
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box
               sx={{
-                width: 10,
-                height: 10,
+                width: 8,
+                height: 8,
                 borderRadius: '50%',
-                bgcolor: selectedStudent.isOnline ? '#10b981' : '#9ca3af',
-                boxShadow: selectedStudent.isOnline ? '0 0 12px #10b981' : 'none',
-                animation: selectedStudent.isOnline ? 'pulse 2s infinite' : 'none',
+                bgcolor: selectedStudent.isOnline ? 'rgb(34 197 94)' : '#9ca3af',
+                boxShadow: selectedStudent.isOnline ? '0 0 8px rgb(34 197 94)' : 'none',
               }}
             />
             <Typography variant="body2" fontFamily="Cairo, sans-serif" sx={{ opacity: 0.95 }}>
@@ -656,8 +791,9 @@ const AssistantTeacherDashboard = () => {
         <IconButton 
           sx={{ 
             color: 'white',
+            bgcolor: 'rgba(255, 255, 255, 0.15)',
             '&:hover': {
-              bgcolor: 'rgba(255, 255, 255, 0.2)',
+              bgcolor: 'rgba(255, 255, 255, 0.25)',
             },
           }}
         >
@@ -665,13 +801,13 @@ const AssistantTeacherDashboard = () => {
         </IconButton>
       </Box>
 
-      {/* ✅ Enhanced Messages Area */}
+      {/* Messages Area */}
       <Box
         sx={{
           flex: 1,
           overflowY: 'auto',
           p: 3,
-          backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h60v60H0z\' fill=\'%23e5ddd5\'/%3E%3Cpath d=\'M30 30m-2 0a2 2 0 1 1 4 0a2 2 0 1 1-4 0\' fill=\'%23d1c4b4\' opacity=\'0.15\'/%3E%3C/svg%3E")',
+          background: 'linear-gradient(to bottom, #f8fafc, #f1f5f9)',
         }}
       >
         {(DUMMY_CHAT_MESSAGES[selectedStudent.id] || []).map((msg) => (
@@ -680,44 +816,29 @@ const AssistantTeacherDashboard = () => {
             sx={{
               display: 'flex',
               justifyContent: msg.sender === 'teacher' ? 'flex-end' : 'flex-start',
-              mb: 2.5,
-              animation: 'fadeIn 0.4s ease-in',
+              mb: 2,
+              animation: 'fadeIn 0.3s ease-in',
               '@keyframes fadeIn': {
-                from: { opacity: 0, transform: 'translateY(15px)' },
+                from: { opacity: 0, transform: 'translateY(10px)' },
                 to: { opacity: 1, transform: 'translateY(0)' },
               },
             }}
           >
             <Paper
-              elevation={2}
+              elevation={0}
               sx={{
-                maxWidth: '75%',
-                bgcolor: msg.sender === 'teacher' ? '#dcfce7' : 'white',
-                borderRadius: 3,
-                position: 'relative',
+                maxWidth: '70%',
+                borderRadius: 2.5,
                 border: '1px solid',
-                borderColor: msg.sender === 'teacher' ? '#10b981' : '#e5e7eb',
-                '&::before': msg.sender === 'teacher' ? {
-                  content: '""',
-                  position: 'absolute',
-                  right: -8,
-                  top: 12,
-                  width: 0,
-                  height: 0,
-                  borderLeft: '8px solid #dcfce7',
-                  borderTop: '8px solid transparent',
-                  borderBottom: '8px solid transparent',
-                } : {
-                  content: '""',
-                  position: 'absolute',
-                  left: -8,
-                  top: 12,
-                  width: 0,
-                  height: 0,
-                  borderRight: '8px solid white',
-                  borderTop: '8px solid transparent',
-                  borderBottom: '8px solid transparent',
-                },
+                borderColor: msg.sender === 'teacher' 
+                  ? 'rgba(99, 102, 241, 0.2)' 
+                  : 'rgba(15, 23, 42, 0.1)',
+                bgcolor: msg.sender === 'teacher' 
+                  ? 'rgba(99, 102, 241, 0.08)' 
+                  : 'white',
+                boxShadow: msg.sender === 'teacher'
+                  ? '0 2px 8px rgba(99, 102, 241, 0.12)'
+                  : '0 2px 8px rgba(0, 0, 0, 0.04)',
               }}
             >
               <Box sx={{ p: 2 }}>
@@ -725,26 +846,35 @@ const AssistantTeacherDashboard = () => {
                   variant="body1"
                   fontFamily="Cairo, sans-serif"
                   fontWeight={600}
-                  sx={{ wordBreak: 'break-word', mb: 0.5, lineHeight: 1.6 }}
+                  sx={{ 
+                    wordBreak: 'break-word', 
+                    mb: 0.5, 
+                    lineHeight: 1.6,
+                    color: 'rgb(17 24 39)',
+                  }}
                 >
                   {msg.text}
                 </Typography>
-                <Typography
-                  variant="caption"
-                  color="text.secondary"
-                  fontFamily="Cairo, sans-serif"
-                  fontWeight={700}
-                  sx={{ display: 'block', textAlign: 'left', fontSize: '0.7rem' }}
-                >
-                  {msg.time}
-                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, justifyContent: 'flex-end' }}>
+                  <Typography
+                    variant="caption"
+                    fontFamily="Cairo, sans-serif"
+                    fontWeight={600}
+                    sx={{ color: 'rgb(107 114 128)', fontSize: '0.7rem' }}
+                  >
+                    {msg.time}
+                  </Typography>
+                  {msg.sender === 'teacher' && (
+                    <CheckCircle sx={{ fontSize: 14, color: 'rgb(99 102 241)' }} />
+                  )}
+                </Box>
               </Box>
             </Paper>
           </Box>
         ))}
       </Box>
 
-      {/* ✅ Enhanced Message Input */}
+      {/* Message Input */}
       <Box
         sx={{
           background: 'white',
@@ -752,20 +882,17 @@ const AssistantTeacherDashboard = () => {
           display: 'flex',
           alignItems: 'center',
           gap: 1.5,
-          boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.08)',
-          borderTop: '2px solid',
-          borderColor: 'rgba(5, 150, 105, 0.1)',
+          boxShadow: '0 -4px 20px rgba(0, 0, 0, 0.06)',
+          borderTop: '1px solid rgba(15, 23, 42, 0.08)',
         }}
       >
         <IconButton 
           size="small" 
           sx={{ 
-            color: '#059669',
+            color: 'rgb(99 102 241)',
             '&:hover': {
-              bgcolor: 'rgba(5, 150, 105, 0.1)',
-              transform: 'scale(1.1)',
+              bgcolor: 'rgba(99, 102, 241, 0.08)',
             },
-            transition: 'all 0.2s',
           }}
         >
           <EmojiEmotions />
@@ -774,12 +901,10 @@ const AssistantTeacherDashboard = () => {
         <IconButton 
           size="small" 
           sx={{ 
-            color: '#059669',
+            color: 'rgb(99 102 241)',
             '&:hover': {
-              bgcolor: 'rgba(5, 150, 105, 0.1)',
-              transform: 'scale(1.1)',
+              bgcolor: 'rgba(99, 102, 241, 0.08)',
             },
-            transition: 'all 0.2s',
           }}
         >
           <AttachFile />
@@ -802,13 +927,13 @@ const AssistantTeacherDashboard = () => {
             sx: { 
               fontFamily: 'Cairo, sans-serif',
               fontWeight: 600,
-              borderRadius: 4,
-              bgcolor: '#f5f5f5',
-              border: '2px solid transparent',
-              transition: 'all 0.3s',
+              borderRadius: 2.5,
+              bgcolor: '#f8fafc',
+              border: '1px solid rgba(15, 23, 42, 0.1)',
               '&:focus-within': {
                 bgcolor: 'white',
-                borderColor: '#059669',
+                borderColor: 'rgba(99, 102, 241, 0.3)',
+                boxShadow: '0 0 0 3px rgba(99, 102, 241, 0.08)',
               },
             },
           }}
@@ -825,20 +950,20 @@ const AssistantTeacherDashboard = () => {
           onClick={handleSendMessage}
           disabled={!messageInput.trim()}
           sx={{
-            bgcolor: '#059669',
+            background: 'linear-gradient(135deg, rgb(99 102 241), rgb(124 58 237))',
             color: 'white',
             width: 48,
             height: 48,
             '&:hover': { 
-              bgcolor: '#047857',
-              transform: 'scale(1.1) rotate(5deg)',
+              background: 'linear-gradient(135deg, rgb(79 70 229), rgb(109 40 217))',
+              transform: 'scale(1.05)',
             },
             '&:disabled': { 
-              bgcolor: '#d1d5db',
+              bgcolor: '#e5e7eb',
               color: '#9ca3af',
             },
-            transition: 'all 0.3s ease',
-            boxShadow: '0 4px 16px rgba(5, 150, 105, 0.4)',
+            transition: 'all 0.2s ease',
+            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
           }}
         >
           <Send />

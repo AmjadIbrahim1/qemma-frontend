@@ -36,7 +36,7 @@ import GradeExams from "../pages/teacher/GradeExams";
 import TeacherSchedule from '../pages/teacher/TeacherSchedule';
 
 // ✅ Assistant Teacher Pages
-import AssistantTeacherDashboard from "../pages/assistant-teacher/AssistantTeacherDashboard";
+import AssistantTeacherDashboard from "../pages/assistant/AssistantTeacherDashboard";
 
 // Parent Pages
 import ParentDashboard from "../pages/parent/Dashboard";
