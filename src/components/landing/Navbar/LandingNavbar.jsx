@@ -1,4 +1,4 @@
-// frontend/src/components/landing/Navbar/LandingNavbar.jsx
+// frontend/src/components/landing/Navbar/LandingNavbar.jsx - UPDATED: Golden Contests Section Link
 import { useContext, useEffect, useState } from 'react';
 import { Button, IconButton, Menu, MenuItem, Avatar, Chip, CircularProgress } from '@mui/material';
 import { 
@@ -14,7 +14,6 @@ import ThemeContext from '../../../contexts/ThemeContext';
 import { useAuth } from '../../../hooks/useAuth';
 import styles from './Navbar.module.css';
 import { Link, useNavigate } from 'react-router-dom';
-import { NAV_LINKS } from '../../../data/landingData';
 
 const LandingNavbar = () => {
   const { darkMode, toggleTheme } = useContext(ThemeContext);
@@ -24,6 +23,16 @@ const LandingNavbar = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [loggingOut, setLoggingOut] = useState(false);
 
+  // UPDATED: Golden Contests section link added
+  const NAV_LINKS = [
+    { label: 'الرئيسية', href: '#hero', id: 'hero' },
+    { label: 'المميزات', href: '#features', id: 'features' },
+    { label: 'المواد الدراسية', href: '#courses', id: 'courses' },
+    { label: 'اوائل قمه', href: '#top-students', id: 'top-students' },
+    { label: 'المسابقات الذهبية', href: '#contest-section', id: 'contest-section' }, // UPDATED: Golden Contests
+    { label: 'من نحن', href: '#about', id: 'about' },
+  ];
+
   useEffect(() => {
     const onScroll = () => setShowTop(window.scrollY > 400);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -31,7 +40,54 @@ const LandingNavbar = () => {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+  const navigateToHome = () => {
+    console.log('🏠 Home button clicked');
+    
+    if (window.location.pathname !== '/') {
+      console.log('🔄 Not on landing page, navigating to /');
+      navigate('/');
+      setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 100);
+    } else {
+      console.log('✅ Already on landing page, scrolling to top');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const handleNavClick = (e, link) => {
+    e.preventDefault();
+    
+    console.log('📍 Nav link clicked:', link.label);
+    
+    if (window.location.pathname !== '/') {
+      console.log('🔄 Not on landing page, navigating to / first');
+      navigate('/');
+      setTimeout(() => {
+        scrollToSection(link.id);
+      }, 100);
+    } else {
+      console.log('✅ On landing page, scrolling to section');
+      scrollToSection(link.id);
+    }
+  };
+
+  const scrollToSection = (id) => {
+    console.log('📍 Scrolling to section:', id);
+    const element = document.getElementById(id);
+    if (element) {
+      const navbarHeight = 80;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    } else {
+      console.warn('⚠️ Section not found:', id);
+    }
+  };
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,15 +103,12 @@ const LandingNavbar = () => {
     
     try {
       await logout();
-      // Logout function will handle redirect
     } catch (error) {
       console.error('Logout error:', error);
-      // Force redirect anyway
       window.location.href = '/';
     }
   };
 
-  // ✅ FIXED: Handle all role types including assistant_teacher
   const handleDashboard = () => {
     handleMenuClose();
     
@@ -78,10 +131,10 @@ const LandingNavbar = () => {
         dashboardRoute = '/student/dashboard';
     }
     
+    console.log('📊 Navigating to dashboard:', dashboardRoute);
     navigate(dashboardRoute);
   };
 
-  // ✅ ENHANCED: Include assistant_teacher in role labels
   const getRoleLabel = (role) => {
     const roleMap = {
       student: 'طالب',
@@ -93,7 +146,6 @@ const LandingNavbar = () => {
     return roleMap[role] || 'مستخدم';
   };
 
-  // ✅ ENHANCED: Color coding for different roles
   const getRoleColor = (role) => {
     const colorMap = {
       student: 'linear-gradient(135deg, rgba(37,99,235,0.15) 0%, rgba(124,58,237,0.15) 100%)',
@@ -136,7 +188,6 @@ const LandingNavbar = () => {
     return name[0];
   };
 
-  // Show loading overlay when logging out
   if (loggingOut) {
     return (
       <div style={{
@@ -168,19 +219,49 @@ const LandingNavbar = () => {
 
   return (
     <>
-      <header className={styles.header} dir="rtl">
+      <header className={styles.header} dir="rtl" style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+        backgroundColor: darkMode ? 'rgba(15, 23, 42, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(10px)',
+        boxShadow: darkMode 
+          ? '0 2px 10px rgba(0, 0, 0, 0.3)' 
+          : '0 2px 10px rgba(0, 0, 0, 0.1)',
+      }}>
         <div className={styles.container}>
-          {/* Logo -> scroll top */}
-          <button type="button" className={styles.logo} onClick={scrollToTop}>
+          <button 
+            type="button" 
+            className={styles.logo} 
+            onClick={navigateToHome}
+            style={{ cursor: 'pointer' }}
+          >
             قِمّة
           </button>
 
-          {/* ROUTE LINKS */}
+          {/* UPDATED: Nav links now include Golden Contests section */}
           <nav className={styles.links}>
             {NAV_LINKS.map((link) => (
-              <Link key={link.label} to={link.href} className={styles.link}>
+              <a
+                key={link.label}
+                href={link.href}
+                className={styles.link}
+                onClick={(e) => handleNavClick(e, link)}
+                style={{
+                  // UPDATED: Highlight Golden Contests link with special color
+                  color: link.id === 'contest-section' 
+                    ? '#f59e0b' 
+                    : 'inherit',
+                  fontWeight: link.id === 'contest-section' 
+                    ? 800 
+                    : 600,
+                }}
+              >
+                {link.id === 'contest-section' && '🏆 '}
                 {link.label}
-              </Link>
+              </a>
             ))}
           </nav>
 
@@ -194,7 +275,6 @@ const LandingNavbar = () => {
 
             {user ? (
               <>
-                {/* User Info Display */}
                 <Button
                   onClick={handleMenuOpen}
                   sx={{
@@ -349,10 +429,11 @@ const LandingNavbar = () => {
         </div>
       </header>
 
-      {/* Scroll to top button */}
+      <div style={{ height: '80px' }} />
+
       <button
         type="button"
-        onClick={scrollToTop}
+        onClick={navigateToHome}
         className={`${styles.toTop} ${showTop ? styles.toTopShow : ''}`}
         aria-label="الرجوع لأعلى الصفحة"
       >

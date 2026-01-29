@@ -1,4 +1,4 @@
-// frontend/src/routes/AppRoutes.jsx - UPDATED WITH SEPARATE CLERK CALLBACKS
+// frontend/src/routes/AppRoutes.jsx - UPDATED WITH CONTEST ROUTES
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 
@@ -24,6 +24,10 @@ import PerformanceReportPage from '../pages/student/PerformanceReportPage';
 import LiveClassPage from '../pages/student/LiveClassPage';
 import TasksPage from '../pages/student/TasksPage';
 
+// Student Contest Pages
+import ContestsPage from '../pages/student/ContestsPage';
+import StudentContestDashboard from '../pages/student/StudentContestDashboard';
+
 // Teacher Pages
 import TeacherDashboard from "../pages/teacher/TeacherDashboard";
 import SendNotification from "../pages/teacher/SendNotification";
@@ -36,6 +40,9 @@ import UploadLesson from "../pages/teacher/UploadLesson";
 import EditCourse from "../pages/teacher/EditCourse";
 import GradeExams from "../pages/teacher/GradeExams";
 import TeacherSchedule from '../pages/teacher/TeacherSchedule';
+
+// Teacher Contest Pages
+import TeacherContests from '../pages/teacher/TeacherContests';
 
 // Assistant Teacher Pages
 import AssistantTeacherDashboard from "../pages/assistant/AssistantTeacherDashboard";
@@ -175,6 +182,25 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute allowedRoles={["student"]}>
             <TasksPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ✅ CONTEST ROUTES */}
+      <Route
+        path="/student/contests"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <ContestsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/student/contests/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["student"]}>
+            <StudentContestDashboard />
           </ProtectedRoute>
         }
       />
@@ -350,6 +376,16 @@ const AppRoutes = () => {
       />
 
       <Route path="/teacher/schedule" element={<TeacherSchedule />} />
+
+      {/* ✅ TEACHER CONTESTS ROUTE */}
+      <Route
+        path="/teacher/contests"
+        element={
+          <ProtectedRoute allowedRoles={["teacher"]}>
+            <TeacherContests />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/teacher/students"

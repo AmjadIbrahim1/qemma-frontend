@@ -1,5 +1,6 @@
-// frontend/src/pages/ProfilePage.jsx - UPDATED: Fixed assistant_teacher label
-import { useState } from "react";
+// frontend/src/pages/ProfilePage.jsx - FRONTEND ONLY VERSION
+// Username is generated and stored in localStorage only
+import { useState, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useTheme } from "../hooks/useTheme";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +14,6 @@ import {
   Card,
   CardContent,
   Chip,
-  Divider,
   Grid,
   IconButton,
   InputAdornment,
@@ -34,8 +34,12 @@ import {
   InfoOutlined,
   DarkMode,
   LightMode,
+  School,
+  AccountCircle,
+  ContentCopy,
 } from "@mui/icons-material";
 import toast from "react-hot-toast";
+import { generateUsername, shouldGenerateUsername } from "../utils/usernameGenerator";
 
 const ProfilePage = () => {
   const { user, updateProfile, addPassword } = useAuth();
@@ -49,14 +53,58 @@ const ProfilePage = () => {
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showUsername, setShowUsername] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [localUsername, setLocalUsername] = useState("");
 
-  // ✅ TASK 2: Fixed role label mapping
+  // Automatic subjects assigned to all teachers (read-only)
+  const teacherSubjects = [
+    "اللغة العربية",
+    "اللغة الإنجليزية",
+    "الفيزياء",
+    "الكيمياء",
+    "الأحياء",
+    "الفيزياء",
+    "الرياضيات",
+    "الجغرافيا",
+    "التاريخ",
+    "الإحصاء",
+  ];
+
+  // 🔥 GENERATE AND STORE USERNAME IN LOCALSTORAGE (FRONTEND ONLY)
+  useEffect(() => {
+    if (user && shouldGenerateUsername(user.role)) {
+      // Create a unique storage key for this user
+      const storageKey = `username_${user.email || user.id}`;
+      
+      // Check if username already exists in localStorage
+      const existingUsername = localStorage.getItem(storageKey);
+      
+      if (existingUsername) {
+        console.log('✅ Found existing username in localStorage:', existingUsername);
+        setLocalUsername(existingUsername);
+      } else {
+        // Generate new username
+        const newUsername = generateUsername(user.role);
+        console.log('🎯 Generated new username:', newUsername);
+        
+        // Save to localStorage
+        localStorage.setItem(storageKey, newUsername);
+        setLocalUsername(newUsername);
+        
+        toast.success('تم إنشاء اسم مستخدم مميز لك! 🎉', {
+          duration: 4000,
+          icon: '✨',
+        });
+      }
+    }
+  }, [user]);
+
   const getRoleLabel = (role) => {
     const roleMap = {
       student: "طالب",
       teacher: "مدرس",
-      assistant_teacher: "مدرس مساعد", // ✅ Changed from 'مستخدم'
+      assistant_teacher: "مدرس مساعد",
       parent: "ولي أمر",
       admin: "مسؤول",
     };
@@ -75,21 +123,31 @@ const ProfilePage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleCopyUsername = () => {
+    if (localUsername) {
+      navigator.clipboard.writeText(localUsername);
+      toast.success('تم نسخ اسم المستخدم! 📋', {
+        icon: '✅',
+      });
     }
   };
 
   const handleSaveProfile = async () => {
     setLoading(true);
     try {
-      await updateProfile({
+      const updateData = {
         name: formData.name,
         phone: formData.phone,
-      });
+      };
+
+      await updateProfile(updateData);
       setEditMode(false);
+      toast.success("تم تحديث البيانات بنجاح");
     } catch (error) {
       console.error("Update profile error:", error);
+      toast.error("فشل تحديث البيانات");
     } finally {
       setLoading(false);
     }
@@ -134,6 +192,9 @@ const ProfilePage = () => {
     user?.hasPassword ||
     user?.authProvider === "local" ||
     user?.authProvider === "hybrid";
+
+  const isTeacher = user?.role === "teacher" || user?.role === "assistant_teacher";
+  const shouldShowUsername = shouldGenerateUsername(user?.role) && localUsername;
 
   return (
     <Box
@@ -190,6 +251,7 @@ const ProfilePage = () => {
         </Box>
 
         <Grid container spacing={3}>
+          {/* Profile Header Card */}
           <Grid item xs={12}>
             <Card
               sx={{
@@ -294,6 +356,7 @@ const ProfilePage = () => {
             </Card>
           </Grid>
 
+          {/* Personal Information Card */}
           <Grid item xs={12}>
             <Card
               sx={{
@@ -390,6 +453,102 @@ const ProfilePage = () => {
                     />
                   </Grid>
 
+                  {/* 🔥 USERNAME FIELD - STORED IN LOCALSTORAGE */}
+                  {shouldShowUsername && (
+                    <Grid item xs={12}>
+                      <Box>
+                        <TextField
+                          fullWidth
+                          label="اسم المستخدم المميز"
+                          value={showUsername ? localUsername : '••••••••••••••'}
+                          disabled
+                          InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                <AccountCircle
+                                  sx={{ color: darkMode ? "#fbbf24" : "#f59e0b" }}
+                                />
+                              </InputAdornment>
+                            ),
+                            endAdornment: (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  size="small"
+                                  onClick={() => setShowUsername(!showUsername)}
+                                  sx={{
+                                    color: darkMode ? "#fbbf24" : "#f59e0b",
+                                    "&:hover": {
+                                      bgcolor: darkMode
+                                        ? "rgba(251, 191, 36, 0.1)"
+                                        : "rgba(245, 158, 11, 0.1)",
+                                    },
+                                  }}
+                                >
+                                  {showUsername ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                                <IconButton
+                                  size="small"
+                                  onClick={handleCopyUsername}
+                                  sx={{
+                                    color: darkMode ? "#fbbf24" : "#f59e0b",
+                                    "&:hover": {
+                                      bgcolor: darkMode
+                                        ? "rgba(251, 191, 36, 0.1)"
+                                        : "rgba(245, 158, 11, 0.1)",
+                                    },
+                                  }}
+                                >
+                                  <ContentCopy fontSize="small" />
+                                </IconButton>
+                              </InputAdornment>
+                            ),
+                          }}
+                          InputLabelProps={{
+                            sx: {
+                              fontFamily: "Cairo, sans-serif",
+                              color: darkMode ? "#fbbf24" : "#f59e0b",
+                              fontWeight: 700,
+                            },
+                          }}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              borderRadius: 2,
+                              bgcolor: darkMode
+                                ? "rgba(255, 152, 0, 0.05)"
+                                : "rgba(245, 158, 11, 0.05)",
+                              "& fieldset": {
+                                borderColor: darkMode
+                                  ? "rgba(251, 191, 36, 0.3)"
+                                  : "rgba(245, 158, 11, 0.3)",
+                                borderWidth: 2,
+                              },
+                            },
+                            "& .MuiInputBase-input": {
+                              color: darkMode ? "#fbbf24" : "#92400e",
+                              fontFamily: "Cairo, sans-serif",
+                              fontWeight: 700,
+                              letterSpacing: showUsername ? '0' : '2px',
+                              fontSize: '1.1rem',
+                            },
+                          }}
+                        />
+                        <Typography
+                          variant="caption"
+                          fontFamily="Cairo, sans-serif"
+                          fontWeight={600}
+                          sx={{
+                            color: darkMode ? "#fbbf24" : "#92400e",
+                            display: "block",
+                            mt: 0.5,
+                            ml: 1.5,
+                          }}
+                        >
+                          ⚠️ اسم المستخدم محجوز ولا يمكن لأي شخص آخر استخدامه
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  )}
+
                   <Grid item xs={12} md={6}>
                     <TextField
                       fullWidth
@@ -472,6 +631,106 @@ const ProfilePage = () => {
             </Card>
           </Grid>
 
+          {/* Teacher Subjects Card */}
+          {isTeacher && (
+            <Grid item xs={12}>
+              <Card
+                sx={{
+                  borderRadius: 3,
+                  boxShadow: darkMode
+                    ? "0 8px 32px rgba(0,0,0,0.3)"
+                    : "0 8px 32px rgba(0,0,0,0.08)",
+                  bgcolor: darkMode ? "#1e293b" : "white",
+                  border: darkMode ? "1px solid #334155" : "none",
+                }}
+              >
+                <CardContent sx={{ p: 4 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 3 }}>
+                    <Box
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: 2,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background:
+                          "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
+                        mr: 2,
+                      }}
+                    >
+                      <School sx={{ color: "white", fontSize: 24 }} />
+                    </Box>
+                    <Box>
+                      <Typography
+                        variant="h6"
+                        fontWeight={900}
+                        fontFamily="Cairo, sans-serif"
+                        sx={{ color: darkMode ? "#f1f5f9" : "#1e293b" }}
+                      >
+                        المواد الدراسية
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        fontFamily="Cairo, sans-serif"
+                        sx={{ color: darkMode ? "#94a3b8" : "#64748b" }}
+                      >
+                        المواد المخصصة لك تلقائياً
+                      </Typography>
+                    </Box>
+                  </Box>
+
+                  <Paper
+                    elevation={0}
+                    sx={{
+                      p: 3,
+                      bgcolor: darkMode
+                        ? "rgba(124, 58, 237, 0.1)"
+                        : "#f5f3ff",
+                      border: "1px solid",
+                      borderColor: darkMode
+                        ? "rgba(124, 58, 237, 0.2)"
+                        : "#e9d5ff",
+                      borderRadius: 2,
+                    }}
+                  >
+                    <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
+                      {teacherSubjects.map((subject, index) => (
+                        <Chip
+                          key={`${subject}-${index}`}
+                          label={subject}
+                          sx={{
+                            fontFamily: "Cairo, sans-serif",
+                            fontWeight: 700,
+                            background:
+                              "linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)",
+                            color: "white",
+                            px: 2,
+                            py: 2.5,
+                            fontSize: "0.95rem",
+                          }}
+                        />
+                      ))}
+                    </Box>
+                    <Typography
+                      variant="caption"
+                      fontFamily="Cairo, sans-serif"
+                      fontWeight={600}
+                      sx={{ 
+                        color: darkMode ? "#a78bfa" : "#7c3aed",
+                        display: "block",
+                        mt: 2,
+                      }}
+                    >
+                      💡 هذه المواد مخصصة تلقائياً لجميع المدرسين
+                    </Typography>
+                  </Paper>
+                </CardContent>
+              </Card>
+            </Grid>
+          )}
+
+          {/* Password Card */}
           <Grid item xs={12}>
             <Card
               sx={{
@@ -643,6 +902,7 @@ const ProfilePage = () => {
             </Card>
           </Grid>
 
+          {/* Action Buttons */}
           {(editMode || passwordMode) && (
             <Grid item xs={12}>
               <Box sx={{ display: "flex", gap: 2 }}>

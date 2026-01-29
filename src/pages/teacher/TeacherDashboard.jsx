@@ -1,4 +1,4 @@
-// frontend/src/pages/teacher/TeacherDashboard.jsx
+// frontend/src/pages/teacher/TeacherDashboard.jsx - UPDATED: Golden Contests for Grade 3
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -17,6 +17,7 @@ import {
   Menu,
   MenuItem,
   Divider,
+  Paper,
 } from '@mui/material';
 import {
   School,
@@ -33,6 +34,7 @@ import {
   CalendarToday,
   MenuBook,
   Campaign,
+  EmojiEvents,
 } from '@mui/icons-material';
 
 const TeacherDashboard = () => {
@@ -40,6 +42,20 @@ const TeacherDashboard = () => {
   const { darkMode } = useTheme();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
+
+  // All subjects automatically assigned to teachers
+  const teacherSubjects = user?.subjects || [
+    "اللغة العربية",
+    "اللغة الإنجليزية",
+    "الفيزياء",
+    "الكيمياء",
+    "الأحياء",
+    "الفيزياء",
+    "الرياضيات",
+    "الجغرافيا",
+    "التاريخ",
+    "الإحصاء",
+  ];
 
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -86,8 +102,15 @@ const TeacherDashboard = () => {
     },
   ];
 
-  // Quick Actions
+  // Quick Actions - UPDATED: Golden Contests for Grade 3
   const quickActions = [
+    {
+      title: 'إدارة المسابقات الذهبية',
+      description: 'أضف أسئلة للمسابقات الذهبية - الصف الثالث',
+      icon: <EmojiEvents />,
+      color: '#f59e0b',
+      action: () => navigate('/teacher/contests'),
+    },
     {
       title: 'إرسال إشعار',
       description: 'أرسل إشعارات للطلاب',
@@ -127,7 +150,7 @@ const TeacherDashboard = () => {
       title: 'كورساتي',
       description: 'عرض وإدارة كورساتك',
       icon: <MenuBook />,
-      color: '#f59e0b',
+      color: '#8b5cf6',
       action: () => navigate('/teacher/my-courses'),
     },
     {
@@ -141,7 +164,7 @@ const TeacherDashboard = () => {
       title: 'رفع درس',
       description: 'أضف محتوى تعليمي جديد',
       icon: <Add />,
-      color: '#8b5cf6',
+      color: '#06b6d4',
       action: () => navigate('/teacher/upload-lesson'),
     },
   ];
@@ -182,16 +205,31 @@ const TeacherDashboard = () => {
                 >
                   مرحباً، {user?.name || 'المدرس'}
                 </Typography>
-                <Chip
-                  label="مدرس"
-                  size="small"
-                  sx={{
-                    bgcolor: 'rgba(255,255,255,0.2)',
-                    color: 'white',
-                    fontFamily: 'Cairo, sans-serif',
-                    fontWeight: 700,
-                  }}
-                />
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <Chip
+                    label="مدرس"
+                    size="small"
+                    sx={{
+                      bgcolor: 'rgba(255,255,255,0.2)',
+                      color: 'white',
+                      fontFamily: 'Cairo, sans-serif',
+                      fontWeight: 700,
+                    }}
+                  />
+                  {teacherSubjects && teacherSubjects.length > 0 && (
+                    <Chip
+                      label={`${teacherSubjects.length} مادة`}
+                      size="small"
+                      icon={<School sx={{ color: 'white !important', fontSize: 16 }} />}
+                      sx={{
+                        bgcolor: 'rgba(255,255,255,0.3)',
+                        color: 'white',
+                        fontFamily: 'Cairo, sans-serif',
+                        fontWeight: 700,
+                      }}
+                    />
+                  )}
+                </Box>
               </Box>
             </Box>
 
@@ -232,6 +270,225 @@ const TeacherDashboard = () => {
       </Menu>
 
       <Container maxWidth="lg" sx={{ py: 4 }}>
+        {/* Golden Contest Management Highlight Card - Grade 3 */}
+        <Card
+          elevation={0}
+          sx={{
+            mb: 4,
+            border: '2px solid',
+            borderColor: '#f59e0b',
+            bgcolor: darkMode ? '#1e293b' : 'white',
+            borderRadius: 3,
+            overflow: 'hidden',
+            position: 'relative',
+          }}
+        >
+          <Box
+            sx={{
+              height: 6,
+              background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+            }}
+          />
+          <CardContent sx={{ p: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                <Box
+                  sx={{
+                    width: 72,
+                    height: 72,
+                    borderRadius: 3,
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 8px 24px rgba(245, 158, 11, 0.3)',
+                  }}
+                >
+                  <EmojiEvents sx={{ fontSize: 40, color: 'white' }} />
+                </Box>
+                <Box>
+                  <Typography
+                    variant="h5"
+                    fontWeight={900}
+                    fontFamily="Cairo, sans-serif"
+                    sx={{ color: darkMode ? '#f1f5f9' : '#1e293b', mb: 0.5 }}
+                  >
+                    🏆 إدارة المسابقات الذهبية
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    fontFamily="Cairo, sans-serif"
+                    sx={{ color: darkMode ? '#94a3b8' : '#64748b', mb: 1 }}
+                  >
+                    أضف أسئلة للمسابقات المخصصة لك وتابع مسابقاتك السابقة
+                  </Typography>
+                  <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                    <Chip
+                      label="الصف الثالث الثانوي"
+                      size="small"
+                      sx={{
+                        bgcolor: darkMode ? 'rgba(245, 158, 11, 0.2)' : '#fffbeb',
+                        color: '#f59e0b',
+                        fontFamily: 'Cairo, sans-serif',
+                        fontWeight: 800,
+                        fontSize: '0.75rem',
+                      }}
+                    />
+                    <Chip
+                      label="علمي رياضة"
+                      size="small"
+                      sx={{
+                        bgcolor: darkMode ? 'rgba(245, 158, 11, 0.15)' : '#fef3c7',
+                        color: '#d97706',
+                        fontFamily: 'Cairo, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.75rem',
+                      }}
+                    />
+                    <Chip
+                      label="علمي علوم"
+                      size="small"
+                      sx={{
+                        bgcolor: darkMode ? 'rgba(245, 158, 11, 0.15)' : '#fef3c7',
+                        color: '#d97706',
+                        fontFamily: 'Cairo, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.75rem',
+                      }}
+                    />
+                    <Chip
+                      label="أدبي"
+                      size="small"
+                      sx={{
+                        bgcolor: darkMode ? 'rgba(245, 158, 11, 0.15)' : '#fef3c7',
+                        color: '#d97706',
+                        fontFamily: 'Cairo, sans-serif',
+                        fontWeight: 700,
+                        fontSize: '0.75rem',
+                      }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+              <Button
+                variant="contained"
+                size="large"
+                startIcon={<EmojiEvents />}
+                onClick={() => navigate('/teacher/contests')}
+                disableElevation
+                sx={{
+                  fontFamily: 'Cairo, sans-serif',
+                  fontWeight: 900,
+                  fontSize: '1rem',
+                  px: 4,
+                  py: 1.5,
+                  borderRadius: 2,
+                  background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                  '&:hover': {
+                    background: 'linear-gradient(135deg, #d97706 0%, #b45309 100%)',
+                  },
+                }}
+              >
+                إدارة المسابقات
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+
+        {/* Teacher Subjects Card */}
+        {teacherSubjects && teacherSubjects.length > 0 && (
+          <Card
+            elevation={0}
+            sx={{
+              mb: 4,
+              border: '1px solid',
+              borderColor: darkMode ? '#334155' : '#e5e7eb',
+              bgcolor: darkMode ? '#1e293b' : 'white',
+            }}
+          >
+            <CardContent sx={{ p: 3 }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+                <Box
+                  sx={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: 2,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    background: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
+                    mr: 2,
+                  }}
+                >
+                  <School sx={{ color: 'white', fontSize: 28 }} />
+                </Box>
+                <Box sx={{ flex: 1 }}>
+                  <Typography
+                    variant="h6"
+                    fontWeight={900}
+                    fontFamily="Cairo, sans-serif"
+                    sx={{ color: darkMode ? '#f1f5f9' : '#1e293b', mb: 0.5 }}
+                  >
+                    المواد الدراسية
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    fontFamily="Cairo, sans-serif"
+                    sx={{ color: darkMode ? '#94a3b8' : '#64748b' }}
+                  >
+                    المواد المخصصة لك
+                  </Typography>
+                </Box>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={() => navigate('/profile')}
+                  sx={{
+                    fontFamily: 'Cairo, sans-serif',
+                    fontWeight: 700,
+                    borderColor: darkMode ? '#475569' : '#e2e8f0',
+                    color: darkMode ? '#f1f5f9' : '#1e293b',
+                    '&:hover': {
+                      borderColor: '#7c3aed',
+                      bgcolor: darkMode ? 'rgba(124, 58, 237, 0.1)' : '#f5f3ff',
+                    },
+                  }}
+                >
+                  عرض الكل
+                </Button>
+              </Box>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 1.5,
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: darkMode ? 'rgba(124, 58, 237, 0.1)' : '#f5f3ff',
+                  border: '2px solid',
+                  borderColor: darkMode ? 'rgba(124, 58, 237, 0.3)' : '#e9d5ff',
+                }}
+              >
+                {teacherSubjects.map((subject, index) => (
+                  <Chip
+                    key={`${subject}-${index}`}
+                    label={subject}
+                    sx={{
+                      fontFamily: 'Cairo, sans-serif',
+                      fontWeight: 700,
+                      background: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
+                      color: 'white',
+                      px: 2,
+                      py: 2,
+                      fontSize: '0.9rem',
+                    }}
+                  />
+                ))}
+              </Box>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Statistics Cards */}
         <Grid container spacing={3} sx={{ mb: 4 }}>
           {stats.map((stat, index) => (

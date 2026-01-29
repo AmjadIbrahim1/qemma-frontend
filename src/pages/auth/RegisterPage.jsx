@@ -1,4 +1,4 @@
-// frontend/src/pages/auth/RegisterPage.jsx - FIXED CLERK CALLBACK ROUTE
+// frontend/src/pages/auth/RegisterPage.jsx - UPDATED: Automatic username generation for students and teachers
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
@@ -20,6 +20,8 @@ import {
   Select,
   MenuItem,
   FormHelperText,
+  Alert,
+  Chip,
 } from "@mui/material";
 import {
   Visibility,
@@ -33,8 +35,10 @@ import {
   Person as PersonIcon,
   FamilyRestroom,
   SupervisorAccount,
+  ContentCopy,
 } from "@mui/icons-material";
 import toast from "react-hot-toast";
+import { generateUsername, getUsernameWarningMessage, shouldGenerateUsername } from "../../utils/usernameGenerator";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
@@ -50,14 +54,29 @@ const RegisterPage = () => {
     phone: "",
     role: "student",
     division: "",
-    parentStudentId: "",
-    assistantTeacherId: "",
+    subject: "",
+    username: "", // Auto-generated username
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [showClerkModal, setShowClerkModal] = useState(false);
+  const [showUsername, setShowUsername] = useState(true); // Show username by default in registration
+
+  // Available subjects for teachers - in exact order as specified
+  const availableSubjects = [
+    "اللغة العربية",
+    "اللغة الإنجليزية",
+    "الفيزياء",
+    "الكيمياء",
+    "الأحياء",
+    "الفيزياء", // Repeated as per requirement
+    "الرياضيات",
+    "الجغرافيا",
+    "التاريخ",
+    "الإحصاء",
+  ];
 
   useEffect(() => {
     const clearClerkSession = async () => {
@@ -83,11 +102,29 @@ const RegisterPage = () => {
     clearClerkSession();
   }, [signOut]);
 
+  // Generate username when role changes
+  useEffect(() => {
+    if (shouldGenerateUsername(formData.role)) {
+      const newUsername = generateUsername(formData.role);
+      setFormData((prev) => ({ ...prev, username: newUsername }));
+      console.log('🎯 Generated username:', newUsername);
+    } else {
+      setFormData((prev) => ({ ...prev, username: "" }));
+    }
+  }, [formData.role]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleCopyUsername = () => {
+    if (formData.username) {
+      navigator.clipboard.writeText(formData.username);
+      toast.success('تم نسخ اسم المستخدم!');
     }
   };
 
@@ -149,8 +186,14 @@ const RegisterPage = () => {
       newErrors.role = "يرجى اختيار نوع الحساب";
     }
 
+    // Only validate division for students
     if (formData.role === 'student' && !formData.division) {
       newErrors.division = "يرجى اختيار القسم الدراسي";
+    }
+
+    // Validate subject for teachers - SINGLE SUBJECT REQUIRED
+    if ((formData.role === 'teacher' || formData.role === 'assistant_teacher') && !formData.subject) {
+      newErrors.subject = "يجب اختيار المادة الدراسية";
     }
 
     setErrors(newErrors);
@@ -165,8 +208,27 @@ const RegisterPage = () => {
     setLoading(true);
     try {
       const { confirmPassword, ...registerData } = formData;
+      
+      // Only include division if role is student
+      if (registerData.role !== 'student') {
+        delete registerData.division;
+      }
+
+      // Only include subject if role is teacher or assistant_teacher
+      if (registerData.role !== 'teacher' && registerData.role !== 'assistant_teacher') {
+        delete registerData.subject;
+      }
+
+      // Only include username if role should have one
+      if (!shouldGenerateUsername(registerData.role)) {
+        delete registerData.username;
+      }
+      
+      console.log('📝 Registering with data:', registerData);
+      
       await register(registerData);
 
+      // Navigate based on role
       let dashboardRoute;
       if (formData.role === "student") {
         dashboardRoute = "/student/dashboard";
@@ -180,6 +242,7 @@ const RegisterPage = () => {
         dashboardRoute = "/student/dashboard";
       }
 
+      console.log('✅ Registration successful, navigating to:', dashboardRoute);
       navigate(dashboardRoute);
     } catch (error) {
       console.error("Register error:", error);
@@ -249,6 +312,10 @@ const RegisterPage = () => {
         return "#6b7280";
     }
   };
+
+  // Check if selected role is teacher or assistant_teacher
+  const isTeacherRole = formData.role === 'teacher' || formData.role === 'assistant_teacher';
+  const shouldShowUsername = shouldGenerateUsername(formData.role);
 
   // Choice Screen
   if (step === "choice") {
@@ -551,6 +618,68 @@ const RegisterPage = () => {
             )}
           </Box>
 
+          {/* Username Display - Auto-generated for students and teachers */}
+          {shouldShowUsername && formData.username && (
+            <Alert
+              severity="warning"
+              sx={{
+                mb: 2,
+                fontFamily: "Cairo, sans-serif",
+                bgcolor: "rgba(255, 152, 0, 0.1)",
+                border: "1px solid rgba(255, 152, 0, 0.3)",
+                borderRadius: 2,
+              }}
+            >
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mb: 1 }}>
+                <Typography
+                  variant="body2"
+                  fontFamily="Cairo, sans-serif"
+                  fontWeight={700}
+                  sx={{ flex: 1 }}
+                >
+                  {getUsernameWarningMessage('')}
+                </Typography>
+              </Box>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
+                <Chip
+                  label={showUsername ? formData.username : '••••••••••'}
+                  sx={{
+                    fontFamily: "Cairo, sans-serif",
+                    fontWeight: 700,
+                    bgcolor: "rgba(255, 152, 0, 0.2)",
+                    color: "#e65100",
+                    flex: 1,
+                  }}
+                />
+                <IconButton
+                  size="small"
+                  onClick={() => setShowUsername(!showUsername)}
+                  sx={{
+                    color: "#e65100",
+                    "&:hover": {
+                      bgcolor: "rgba(255, 152, 0, 0.1)",
+                    },
+                  }}
+                >
+                  {showUsername ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+                <IconButton
+                  size="small"
+                  onClick={handleCopyUsername}
+                  sx={{
+                    color: "#e65100",
+                    "&:hover": {
+                      bgcolor: "rgba(255, 152, 0, 0.1)",
+                    },
+                  }}
+                >
+                  <ContentCopy />
+                </IconButton>
+              </Box>
+            </Alert>
+          )}
+
+          {/* Division selection - Only for students */}
           {formData.role === 'student' && (
             <FormControl fullWidth sx={{ mb: 2 }} error={!!errors.division}>
               <InputLabel sx={{ fontFamily: 'Cairo, sans-serif' }}>
@@ -581,46 +710,44 @@ const RegisterPage = () => {
             </FormControl>
           )}
 
-          {formData.role === 'parent' && (
-            <TextField
-              fullWidth
-              name="parentStudentId"
-              label="ولي أمر للطالب"
-              value={formData.parentStudentId}
-              disabled
-              placeholder="سيتم التفعيل قريباً"
-              sx={{ 
-                mb: 2,
-                '& .MuiInputBase-input': {
+          {/* SINGLE Subject selection - Only for teachers and assistant teachers */}
+          {isTeacherRole && (
+            <FormControl fullWidth sx={{ mb: 2 }} error={!!errors.subject}>
+              <InputLabel sx={{ fontFamily: 'Cairo, sans-serif' }}>
+                المادة الدراسية *
+              </InputLabel>
+              <Select
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                label="المادة الدراسية *"
+                sx={{ 
                   fontFamily: 'Cairo, sans-serif',
-                },
-                '& .MuiInputLabel-root': {
-                  fontFamily: 'Cairo, sans-serif',
-                }
-              }}
-              helperText="هذه الميزة قيد التطوير"
-            />
-          )}
-
-          {formData.role === 'assistant_teacher' && (
-            <TextField
-              fullWidth
-              name="assistantTeacherId"
-              label="مساعد للمدرس"
-              value={formData.assistantTeacherId}
-              disabled
-              placeholder="سيتم التفعيل قريباً"
-              sx={{ 
-                mb: 2,
-                '& .MuiInputBase-input': {
-                  fontFamily: 'Cairo, sans-serif',
-                },
-                '& .MuiInputLabel-root': {
-                  fontFamily: 'Cairo, sans-serif',
-                }
-              }}
-              helperText="هذه الميزة قيد التطوير"
-            />
+                  '& .MuiSelect-select': {
+                    fontFamily: 'Cairo, sans-serif',
+                  }
+                }}
+              >
+                {availableSubjects.map((subject, index) => (
+                  <MenuItem 
+                    key={`${subject}-${index}`} 
+                    value={subject}
+                    sx={{ fontFamily: 'Cairo, sans-serif', fontWeight: 600 }}
+                  >
+                    {subject}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.subject ? (
+                <FormHelperText sx={{ fontFamily: 'Cairo, sans-serif' }}>
+                  {errors.subject}
+                </FormHelperText>
+              ) : (
+                <FormHelperText sx={{ fontFamily: 'Cairo, sans-serif' }}>
+                  اختر المادة التي ستقوم بتدريسها
+                </FormHelperText>
+              )}
+            </FormControl>
           )}
 
           <TextField
