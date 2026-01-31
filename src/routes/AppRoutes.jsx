@@ -30,6 +30,9 @@ import AboutPage from "../pages/About/AboutPage";
 import StartJourneyPage from "../pages/StartJourney/StartJourneyPage";
 import TeachersBooksPage from "../pages/StartJourney/TeachersBooksPage";
 import TeacherBookDetailsPage from "../pages/StartJourney/TeacherBookDetailsPage";
+import CoursesPage  from "../pages/StartJourney/CoursesPage";
+import CourseDetailsPage  from "../pages/StartJourney/Coursedetailspage";
+import ExamsPageOut from "../pages/StartJourney/ExamsPageOut";
 
 // Student Contest Pages
 import ContestsPage from "../pages/student/ContestsPage";
@@ -47,6 +50,7 @@ import UploadLesson from "../pages/teacher/UploadLesson";
 import EditCourse from "../pages/teacher/EditCourse";
 import GradeExams from "../pages/teacher/GradeExams";
 import TeacherSchedule from "../pages/teacher/TeacherSchedule";
+import TeacherBooks from "../pages/teacher/TeacherBooks";
 
 // Teacher Contest Pages
 import TeacherContests from "../pages/teacher/TeacherContests";
@@ -88,7 +92,7 @@ const AppRoutes = () => {
 
       <Route path="/about" element={<AboutPage />} />
       <Route path="/about-us" element={<AboutPage />} />
-      <Route path="/courses" element={<AboutPage />} />
+      {/* <Route path="/courses" element={<AboutPage />} /> */}
       <Route path="/teachers" element={<AboutPage />} />
       <Route path="/contact-us" element={<AboutPage />} />
       <Route path="/privacy-policy" element={<AboutPage />} />
@@ -96,10 +100,16 @@ const AppRoutes = () => {
 
       <Route path="/start-journey" element={<StartJourneyPage />} />
       <Route path="/teachers-books" element={<TeachersBooksPage />} />
+      
       <Route
         path="/teachers-books/:bookId"
         element={<TeacherBookDetailsPage />}
       />
+
+      <Route path="/exams" element={<ExamsPageOut />} />
+      {/* Courses Routes */}
+      <Route path="/courses" element={<CoursesPage />} />
+      <Route path="/courses/:courseId" element={<CourseDetailsPage />}/>
 
       {/* PROFILE - PROTECTED */}
       <Route
@@ -433,6 +443,15 @@ const AppRoutes = () => {
         }
       />
 
+      {/* ✅ TEACHER BOOKS ROUTE */}
+<Route
+  path="/teacher/books"
+  element={
+    <ProtectedRoute allowedRoles={["teacher"]}>
+      <TeacherBooks />
+    </ProtectedRoute>
+  }
+/>
       {/* ========================================
           PROTECTED ROUTES - ASSISTANT TEACHER 
           ======================================== */}

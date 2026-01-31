@@ -1,4 +1,4 @@
-// frontend/src/pages/teacher/TeacherDashboard.jsx - UPDATED: Golden Contests for Grade 3
+// frontend/src/pages/teacher/TeacherDashboard.jsx - UPDATED: Books Management Added
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -102,7 +102,7 @@ const TeacherDashboard = () => {
     },
   ];
 
-  // Quick Actions - UPDATED: Golden Contests for Grade 3
+  // Quick Actions - UPDATED: Added Books Management
   const quickActions = [
     {
       title: 'إدارة المسابقات الذهبية',
@@ -110,6 +110,13 @@ const TeacherDashboard = () => {
       icon: <EmojiEvents />,
       color: '#f59e0b',
       action: () => navigate('/teacher/contests'),
+    },
+    {
+      title: 'مكتبة الكتب',
+      description: 'إدارة ورفع الكتب الدراسية',
+      icon: <MenuBook />,
+      color: '#8b5cf6',
+      action: () => navigate('/teacher/books'),
     },
     {
       title: 'إرسال إشعار',
@@ -150,7 +157,7 @@ const TeacherDashboard = () => {
       title: 'كورساتي',
       description: 'عرض وإدارة كورساتك',
       icon: <MenuBook />,
-      color: '#8b5cf6',
+      color: '#06b6d4',
       action: () => navigate('/teacher/my-courses'),
     },
     {
@@ -164,7 +171,7 @@ const TeacherDashboard = () => {
       title: 'رفع درس',
       description: 'أضف محتوى تعليمي جديد',
       icon: <Add />,
-      color: '#06b6d4',
+      color: '#f59e0b',
       action: () => navigate('/teacher/upload-lesson'),
     },
   ];
