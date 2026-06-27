@@ -1,20 +1,14 @@
-# Qemma Backend
+# Qemma Frontend
 
-AI-powered Learning Management System backend.
+Frontend application for Qemma LMS.
 
 ## Tech Stack
-- Node.js
-- Express.js
-- PostgreSQL
-- MongoDB
-- Redis
-- Prisma
+- React.js
+- Redux Toolkit
 - Socket.IO
+- WebRTC
 
 ## Branching Strategy
 - main → production
 - develop → integration
 - feature/* → new features
-
-## Getting Started
-Instructions will be added soon.
