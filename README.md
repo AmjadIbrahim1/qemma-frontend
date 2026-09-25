@@ -15,9 +15,25 @@
 
 ## 📌 Project Overview
 
-**Qemma Frontend** is the client-side application for **Qemma**, an AI-powered Learning Management System (LMS). It delivers the interactive learning interface with real-time collaboration features.
+**Qemma Frontend** is the **client-side application** of the **Qemma** project — an AI-powered Learning Management System (LMS). It delivers the interactive learning interface with real-time collaboration features.
+
+**Its role in the project:** the frontend is the face of Qemma. It consumes the backend API to render courses and content, manages application state with Redux Toolkit, and enables real-time collaboration (chat, notifications) and peer-to-peer audio/video via Socket.IO and WebRTC.
 
 > **Status:** Repository scaffold — issue/PR templates are set up and the tech stack is defined. Implementation is in progress.
+
+---
+
+## 🏗️ Project Architecture — The Qemma Ecosystem
+
+Qemma is **one project split across three repositories**:
+
+| Repository | Role in the project | Link |
+|------------|--------------------|------|
+| **Qema-Graduation-Project** | Documentation hub — SRS, ERD, timelines, testing & user manual | [Open](https://github.com/AmjadIbrahim1/Qema-Graduation-Project) |
+| **qemma-backend** | Backend API & real-time server (Node.js, Express, PostgreSQL, Redis) | [Open](https://github.com/AmjadIbrahim1/qemma-backend) |
+| **qemma-frontend** *(this repo)* | Frontend web application (React, Redux Toolkit, WebRTC) | [Open](https://github.com/AmjadIbrahim1/qemma-frontend) |
+
+> 📖 Start with the [Qema-Graduation-Project](https://github.com/AmjadIbrahim1/Qema-Graduation-Project) repository for the full system documentation (SRS, ERD, timelines).
 
 ---
 
